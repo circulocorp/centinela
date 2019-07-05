@@ -1,0 +1,4 @@
+PydoNovosoft==1.1.9
+requests
+json_logging
+psycopg2-binary
