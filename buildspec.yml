@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       - echo Build version $VERSION started on `date`
-      - docker build -t cementos-service:$VERSION .
+      - docker build -t centinela:$VERSION .
       - docker tag centinela:$VERSION $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/centinela:$VERSION
       - docker tag centinela:$VERSION $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/centinela:latest
   post_build:
