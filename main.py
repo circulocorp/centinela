@@ -30,7 +30,7 @@ else:
     mzone_user = env_cfg["mzone_user"]
     mzone_pass = env_cfg["mzone_pass"]
     mzone_secret = env_cfg["mzone_secret"]
-    centinela_token = "2961b1186cf0b0a71ad401b9c954f33b"
+    centinela_token = ""
     pghost = env_cfg["pg_host"]
     pguser = env_cfg["pg_user"]
     pgpass = env_cfg["pg_pass"]

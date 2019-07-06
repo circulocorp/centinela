@@ -1,16 +1,16 @@
 {
 	"name": "centinela",
-	"version": "0.0.3",
+	"version": "0.0.5",
 	"description": "Servicio Centinela",
 	"author": "Mauricio Barrera",
 	"dev": {
         "API_URL": "http://localhost:8080",
 		"pg_host": "192.168.1.71",
 		"pg_user": "circulocorp",
-		"pg_pass": "admin123",
-		"mzone_user": "ADMIN@0309",
-		"mzone_pass": "A3TEKCC0309",
-		"mzone_secret": "WJ4wUJo79qFsMm4T9Rj7dKw4",
+		"pg_pass": "",
+		"mzone_user": "",
+		"mzone_pass": "",
+		"mzone_secret": "",
 		"secrets": false
     },
     "stage": {
