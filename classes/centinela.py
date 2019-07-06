@@ -83,9 +83,9 @@ class Centinela(object):
     def report_position(self, report):
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
         position = mzone.get_last_position(report["vehicle_id"])
-        print(position)
         if position:
             token = b64.b64encode("centinela:"+self.token)
+            print(token)
             headers = {"Authorization": "Baerer %s" % token}
             resp = {}
             if not report["folio"]:
@@ -101,5 +101,6 @@ class Centinela(object):
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 resp = requests.post(self._endpoint+"api/reporte", data=data, headers=headers, verify=False)
-                self._update_folio(report, resp.json())
-                self._generate_historic(report, position, resp.json())
+                print(resp.text)
+            self._update_folio(report, resp.json())
+            self._generate_historic(report, position, resp.json())
