@@ -37,6 +37,7 @@ else:
 
 
 def start(reporte):
+    print("Working with report:"+str(reporte["id"]))
     cent = Centinela(dbuser=pguser, dbpass=pgpass, dbhost=pghost, mzone_user=mzone_user,
                      mzone_pass=mzone_pass, mzone_secret=mzone_secret, token=centinela_token)
     cent.report_position(reporte)
