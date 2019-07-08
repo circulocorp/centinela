@@ -93,6 +93,7 @@ class Centinela(object):
                         'mr': report["marca"], 'md': report["modelo"], 'an': report["unidadyear"], 'cl': report["color"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
+                print(data)
                 resp = requests.post(self._endpoint+"api/reporte", data=data, headers=headers, verify=False)
                 print(resp.text)
             else:
