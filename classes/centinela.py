@@ -85,8 +85,7 @@ class Centinela(object):
         position = mzone.get_last_position(report["vehicle_id"])
         if position:
             token = b64.b64encode("centinela:"+self.token)
-            print(token)
-            headers = {"Authorization": "Baerer %s" % token}
+            headers = {"Authorization": "Bearer %s" % token}
             resp = {}
             if not report["folio"]:
                 data = {'fl': 0, 'ln': position["longitude"], 'lt': position["latitude"], 'vl': position["speed"],
