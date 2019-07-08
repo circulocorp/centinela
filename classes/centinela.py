@@ -85,7 +85,7 @@ class Centinela(object):
         position = mzone.get_last_position(report["vehicle_id"])
         if position:
             token = b64.b64encode("centinela:"+self.token)
-            headers = {"Authorization": "Bearer %s" % token}
+            headers = {"Authorization": "Bearer %s" % token, "Content-Type": "application/json"}
             resp = {}
             if not report["folio"]:
                 data = {'fl': 0, 'ln': position["longitude"], 'lt': position["latitude"], 'vl': position["speed"],
@@ -94,6 +94,7 @@ class Centinela(object):
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 print(data)
+                print(headers)
                 resp = requests.post(self._endpoint+"api/reporte", data=data, headers=headers, verify=False)
                 print(resp.text)
             else:
