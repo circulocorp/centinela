@@ -1,6 +1,7 @@
 import requests
 import base64 as b64
 import psycopg2 as pg
+import json
 from PydoNovosoft.utils import Utils
 from PydoNovosoft.scope.mzone import MZone
 
@@ -93,15 +94,13 @@ class Centinela(object):
                         'mr': report["marca"], 'md': report["modelo"], 'an': report["unidadyear"], 'cl': report["color"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
-                print(data)
-                print(headers)
-                resp = requests.post(self._endpoint+"api/reporte", data=data, headers=headers, verify=False)
+                resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
                 print(resp.text)
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
-                resp = requests.post(self._endpoint+"api/reporte", data=data, headers=headers, verify=False)
+                resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
                 print(resp.text)
             self._update_folio(report, resp.json())
             self._generate_historic(report, position, resp.json())
