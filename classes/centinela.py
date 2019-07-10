@@ -55,10 +55,9 @@ class Centinela(object):
             self._connect()
         cursor = self._conn.cursor()
         status = 2
-        print(rest)
         folio = None
         if rest["status"]:
-            folio = rest["data"]["folio"]
+            folio = rest["data"][0]["folio"]
         else:
             folio = report["folio"]
             if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
@@ -86,6 +85,7 @@ class Centinela(object):
             token = b64.b64encode("centinela:"+self.token)
             headers = {"Authorization": "Bearer %s" % token, "Content-Type": "application/json"}
             resp = {}
+            print(report)
             if not report["folio"]:
                 data = {'fl': 0, 'ln': position["longitude"], 'lt': position["latitude"], 'vl': position["speed"],
                         'rm': position["vehicle"]["odometer"], 'pl': report["placa"], 'vn': report["vin"],
@@ -93,11 +93,11 @@ class Centinela(object):
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
-                self._update_folio(report, resp.json())
+
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
-                self._update_folio(report, resp.json())
+            self._update_folio(report, resp.json())
             self._generate_historic(report, position, resp.json())
