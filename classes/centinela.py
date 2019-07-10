@@ -55,6 +55,7 @@ class Centinela(object):
             self._connect()
         cursor = self._conn.cursor()
         status = 2
+        print(rest)
         folio = None
         if rest["status"]:
             folio = rest["data"]["folio"]
