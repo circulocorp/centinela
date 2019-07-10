@@ -50,25 +50,20 @@ class Centinela(object):
 
     def _update_folio(self, report, rest):
         sql = "update centinela.reportes set folio=%s,status=%s where id=%s"
-        print(rest)
+        print(sql)
         if not self._conn:
             self._connect()
-        try:
-            cursor = self._conn.cursor()
-            status = 2
-            folio = None
-            if rest["status"]:
-                folio = rest["data"][0]["folio"]
-            else:
-                folio = report["folio"]
-                if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
-                    status = 5
-
-            cursor.execute(sql, (folio, status, report["id"]))
-            print(sql)
-            self._conn.commit()
-        except (Exception, pg.Error) as error:
-            print(error)
+        cursor = self._conn.cursor()
+        status = 2
+        folio = None
+        if rest["status"]:
+            folio = rest["data"][0]["folio"]
+        else:
+            folio = report["folio"]
+            if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
+                status = 5
+        cursor.execute(sql, (folio, status, report["id"]))
+        self._conn.commit()
 
     def _generate_historic(self, report, position, rest):
         sql = "INSERT INTO centinela.reportehistorico(folio,latitud,longitud,velocidad,rumbo,log, created) " \
