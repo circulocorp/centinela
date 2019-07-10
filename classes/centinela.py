@@ -56,7 +56,7 @@ class Centinela(object):
         cursor = self._conn.cursor()
         status = 2
         folio = None
-        if rest["status"]:
+        if not report["folio"] and rest["status"]:
             folio = rest["data"][0]["folio"]
         else:
             folio = report["folio"]
@@ -70,6 +70,7 @@ class Centinela(object):
               "values(%s,%s,%s,%s,%s,%s, NOW())"
         if not self._conn:
             self._connect()
+        print(sql)
         try:
             cursor = self._conn.cursor()
             cursor.execute(sql, (report["folio"], position["latitude"], position["longitude"], position["speed"],
@@ -85,7 +86,6 @@ class Centinela(object):
             token = b64.b64encode("centinela:"+self.token)
             headers = {"Authorization": "Bearer %s" % token, "Content-Type": "application/json"}
             resp = {}
-            print(report)
             if not report["folio"]:
                 data = {'fl': 0, 'ln': position["longitude"], 'lt': position["latitude"], 'vl': position["speed"],
                         'rm': position["vehicle"]["odometer"], 'pl': report["placa"], 'vn': report["vin"],
@@ -93,7 +93,6 @@ class Centinela(object):
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
-
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
