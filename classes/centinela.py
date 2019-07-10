@@ -32,6 +32,7 @@ class Centinela(object):
             data = cursor.fetchall()
             for row in data:
                 report = {}
+                report["id"] = row[0]
                 report["folio"] = row[1]
                 report["marca"] = row[2]
                 report["modelo"] = row[3]
@@ -50,7 +51,6 @@ class Centinela(object):
 
     def _update_folio(self, report, rest):
         sql = "update centinela.reportes set folio=%s,status=%s where id=%s"
-        print(sql)
         if not self._conn:
             self._connect()
         cursor = self._conn.cursor()
