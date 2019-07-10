@@ -97,12 +97,11 @@ class Centinela(object):
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
-                print(resp.text)
+                self._update_folio(report, resp.json())
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
-                print(resp.text)
-            self._update_folio(report, resp.json())
+                self._update_folio(report, resp.json())
             self._generate_historic(report, position, resp.json())
