@@ -50,6 +50,7 @@ class Centinela(object):
 
     def _update_folio(self, report, rest):
         sql = "update centinela.reportes set folio=%s,status=%s where id=%s"
+        print(rest)
         if not self._conn:
             self._connect()
         try:
@@ -64,6 +65,7 @@ class Centinela(object):
                     status = 5
 
             cursor.execute(sql, (folio, status, report["id"]))
+            print(sql)
             self._conn.commit()
         except (Exception, pg.Error) as error:
             print(error)
