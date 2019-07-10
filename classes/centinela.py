@@ -53,17 +53,20 @@ class Centinela(object):
         print(sql)
         if not self._conn:
             self._connect()
-        cursor = self._conn.cursor()
-        status = 2
-        folio = None
-        if rest["status"]:
-            folio = rest["data"][0]["folio"]
-        else:
-            folio = report["folio"]
-            if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
-                status = 5
-        cursor.execute(sql, (folio, status, report["id"]))
-        self._conn.commit()
+        try:
+            cursor = self._conn.cursor()
+            status = 2
+            folio = None
+            if rest["status"]:
+                folio = rest["data"]["folio"]
+            else:
+                folio = report["folio"]
+                if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
+                    status = 5
+            cursor.execute(sql, (folio, status, report["id"]))
+            self._conn.commit()
+        except (Exception, pg.Error) as error:
+            print(error)
 
     def _generate_historic(self, report, position, rest):
         sql = "INSERT INTO centinela.reportehistorico(folio,latitud,longitud,velocidad,rumbo,log, created) " \
