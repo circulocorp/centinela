@@ -72,7 +72,7 @@ class Centinela(object):
             self._connect()
         cursor = self._conn.cursor()
         cursor.execute(sql, (report["folio"], position["latitude"], position["longitude"], position["speed"],
-                                 position["odometer"], rest.json()))
+                             position["vehicle"]["odometer"], rest.json()))
         self._conn.commit()
 
     def report_position(self, report):
