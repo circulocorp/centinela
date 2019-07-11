@@ -71,13 +71,10 @@ class Centinela(object):
         if not self._conn:
             self._connect()
         print(sql)
-        try:
-            cursor = self._conn.cursor()
-            cursor.execute(sql, (report["folio"], position["latitude"], position["longitude"], position["speed"],
+        cursor = self._conn.cursor()
+        cursor.execute(sql, (report["folio"], position["latitude"], position["longitude"], position["speed"],
                                  position["odometer"], rest.json()))
-            self._conn.commit()
-        except (Exception, pg.Error) as error:
-            print(error)
+        self._conn.commit()
 
     def report_position(self, report):
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
