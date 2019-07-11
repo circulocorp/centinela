@@ -70,7 +70,6 @@ class Centinela(object):
               "values(%s,%s,%s,%s,%s,%s, NOW())"
         if not self._conn:
             self._connect()
-        print(sql)
         cursor = self._conn.cursor()
         cursor.execute(sql, (report["folio"], position["latitude"], position["longitude"], position["speed"],
                                  position["odometer"], rest.json()))
