@@ -11,8 +11,7 @@ class Centinela(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
         self._conn = None
-        if not self.endpoint:
-            self.endpoint = "https://api-centinela.webmaps.com.mx/"
+        self.endpoint = "https://api-centinela.webmaps.com.mx/"
 
     def _connect(self):
         try:
