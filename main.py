@@ -19,16 +19,16 @@ config = Utils.read_config("package.json")
 env_cfg = config[os.environ["environment"]]
 
 if env_cfg["secrets"]:
-    mzone_user = Utils.get_secret("mzone_user")
-    mzone_pass = Utils.get_secret("mzone_pass")
+    mzone_user = Utils.get_secret("centinelaz_user")
+    mzone_pass = Utils.get_secret("centinelaz_pass")
     mzone_secret = Utils.get_secret("mzone_secret")
     centinela_token = Utils.get_secret("centinela_token")
     pghost = Utils.get_secret("pg_host")
     pguser = Utils.get_secret("pg_user")
     pgpass = Utils.get_secret("pg_pass")
 else:
-    mzone_user = env_cfg["centinelaz_user"]
-    mzone_pass = env_cfg["centinelaz_pass"]
+    mzone_user = env_cfg["mzone_user"]
+    mzone_pass = env_cfg["mzone_pass"]
     mzone_secret = env_cfg["mzone_secret"]
     centinela_token = ""
     pghost = env_cfg["pg_host"]
