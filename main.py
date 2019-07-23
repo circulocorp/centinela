@@ -39,8 +39,7 @@ else:
 def start(reporte):
     print(reporte)
     cent = Centinela(dbuser=pguser, dbpass=pgpass, dbhost=pghost, mzone_user=mzone_user,
-                     mzone_pass=mzone_pass, mzone_secret=mzone_secret, token=centinela_token,
-                     endpoint="https://api-centinela.webmaps.com.mx/")
+                     mzone_pass=mzone_pass, mzone_secret=mzone_secret, token=centinela_token)
     cent.report_position(reporte)
 
 
