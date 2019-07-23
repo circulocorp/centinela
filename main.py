@@ -27,8 +27,8 @@ if env_cfg["secrets"]:
     pguser = Utils.get_secret("pg_user")
     pgpass = Utils.get_secret("pg_pass")
 else:
-    mzone_user = env_cfg["mzone_user"]
-    mzone_pass = env_cfg["mzone_pass"]
+    mzone_user = env_cfg["centinelaz_user"]
+    mzone_pass = env_cfg["centinelaz_pass"]
     mzone_secret = env_cfg["mzone_secret"]
     centinela_token = ""
     pghost = env_cfg["pg_host"]
@@ -39,7 +39,8 @@ else:
 def start(reporte):
     print(reporte)
     cent = Centinela(dbuser=pguser, dbpass=pgpass, dbhost=pghost, mzone_user=mzone_user,
-                     mzone_pass=mzone_pass, mzone_secret=mzone_secret, token=centinela_token)
+                     mzone_pass=mzone_pass, mzone_secret=mzone_secret, token=centinela_token,
+                     endpoint="https://api-centinela.webmaps.com.mx/")
     cent.report_position(reporte)
 
 

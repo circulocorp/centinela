@@ -11,7 +11,8 @@ class Centinela(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
         self._conn = None
-        self._endpoint = "https://api-centineladev.webmaps.com.mx/"
+        if not self.endpoint:
+            self.endpoint = "https://api-centineladev.webmaps.com.mx/"
 
     def _connect(self):
         try:
@@ -22,7 +23,8 @@ class Centinela(object):
             print(error)
 
     def get_open_reports(self):
-        sql = "select * from centinela.reportes where status < 4"
+        sql = "select id,folio,marca,modelo,unidadyear,color,placa,vin,created,status,vehicle_id from " \
+              "centinela.reportes where status < 4"
         reports = []
         if not self._conn:
             self._connect()
@@ -88,11 +90,11 @@ class Centinela(object):
                         'mr': report["marca"], 'md': report["modelo"], 'an': report["unidadyear"], 'cl': report["color"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
-                resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
+                resp = requests.post(self.endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
-                resp = requests.post(self._endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
+                resp = requests.post(self.endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
             self._update_folio(report, resp.json())
             self._generate_historic(report, position, resp.json())
