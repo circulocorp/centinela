@@ -59,7 +59,7 @@ class Centinela(object):
         folio = None
         if not report["folio"] and rest["status"]:
             print(rest)
-            folio = rest["data"][0]["folio"]
+            folio = rest["data"]["folio"]
         else:
             folio = report["folio"]
             if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
