@@ -58,6 +58,7 @@ class Centinela(object):
         status = 2
         folio = None
         if not report["folio"] and rest["status"]:
+            print(rest)
             folio = rest["data"][0]["folio"]
         else:
             folio = report["folio"]
