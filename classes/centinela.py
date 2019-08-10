@@ -23,7 +23,7 @@ class Centinela(object):
 
     def get_open_reports(self):
         sql = 'select id,folio,marca,modelo,unidadyear,color,placa,vin,created,status,"vehicle_Id" from ' \
-              'centinela.reportes where status < 4'
+              'centinela.reportes where status < 4 and "vehicle_Id" != ""'
         reports = []
         if not self._conn:
             self._connect()
@@ -81,6 +81,7 @@ class Centinela(object):
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
         print(report["vehicle_Id"])
         position = mzone.get_last_position(str(report["vehicle_Id"]))
+        print(position)
         if position:
             token = b64.b64encode("centinela:"+self.token)
             headers = {"Authorization": "Bearer %s" % token, "Content-Type": "application/json"}
