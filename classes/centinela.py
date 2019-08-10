@@ -22,8 +22,8 @@ class Centinela(object):
             print(error)
 
     def get_open_reports(self):
-        sql = "select id,folio,marca,modelo,unidadyear,color,placa,vin,created,status,vehicle_id from " \
-              "centinela.reportes where status < 4"
+        sql = 'select id,folio,marca,modelo,unidadyear,color,placa,vin,created,status,"vehicle_Id" from ' \
+              'centinela.reportes where status < 4'
         reports = []
         if not self._conn:
             self._connect()
@@ -43,7 +43,7 @@ class Centinela(object):
                 report["vin"] = row[7]
                 report["created"] = row[8]
                 report["status"] = row[9]
-                report["vehicle_id"] = row[10]
+                report["vehicle_Id"] = row[10]
                 reports.append(report)
         except (Exception, pg.Error) as error:
             print(error)
