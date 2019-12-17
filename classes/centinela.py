@@ -44,6 +44,7 @@ class Centinela(object):
                 report["created"] = row[8]
                 report["status"] = row[9]
                 report["vehicle_Id"] = row[10]
+                print(report)
                 reports.append(report)
         except (Exception, pg.Error) as error:
             print(error)
@@ -91,11 +92,13 @@ class Centinela(object):
                         'mr': report["marca"], 'md': report["modelo"], 'an': report["unidadyear"], 'cl': report["color"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
+                print(resp)
                 resp = requests.post(self.endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
+                print(resp)
                 resp = requests.post(self.endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
             self._update_folio(report, resp.json())
             self._generate_historic(report, position, resp.json())
