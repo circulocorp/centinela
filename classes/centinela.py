@@ -4,6 +4,17 @@ import psycopg2 as pg
 import json
 from PydoNovosoft.utils import Utils
 from PydoNovosoft.scope.mzone import MZone
+import json_logging
+import logging
+import sys
+
+
+json_logging.ENABLE_JSON_LOGGING = True
+json_logging.init()
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class Centinela(object):
@@ -19,10 +30,11 @@ class Centinela(object):
                               database="sos")
             self._conn = conn
         except (Exception, pg.Error) as error:
+            logger.error(str(error), extra={'props': {"app": "centinela"}})
             print(error)
 
     def get_open_reports(self):
-        sql = "select id,folio,marca,modelo,unidadyear,color,placa,vin,created,status,\"vehicle_Id\" from " \
+        sql = "select id,folio,marca,modelo,unidadyear,color,placa,vin,\"Unit_Id\", created,status,\"vehicle_Id\" from " \
               "centinela.reportes where status < 4 and \"vehicle_Id\" !=  ''"
         reports = []
         if not self._conn:
@@ -44,11 +56,11 @@ class Centinela(object):
                 report["created"] = row[8]
                 report["status"] = row[9]
                 report["vehicle_Id"] = row[10]
-                print(report)
                 reports.append(report)
         except (Exception, pg.Error) as error:
-            print(error)
+            logger.error(str(error), extra={'props': {"app": "centinela"}})
         finally:
+            logger.info("Active reports", extra={'props': {"app": "centinela", "data": reports}})
             return reports
 
     def _update_folio(self, report, rest):
@@ -59,11 +71,14 @@ class Centinela(object):
         status = 2
         folio = None
         if not report["folio"] and rest["status"]:
-            print(rest)
+            logger.info("The report doesn't have ID yet is consider as open",
+                        extra={'props': {"app": "centinela", "data": rest["data"]}})
             folio = rest["data"]["folio"]
         else:
             folio = report["folio"]
             if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
+                logger.info("The reports limit was exceeded changing status to 5",
+                            extra={'props': {"app": "centinela", "data": report}})
                 status = 5
         cursor.execute(sql, (folio, status, report["id"]))
         self._conn.commit()
@@ -81,7 +96,7 @@ class Centinela(object):
     def report_position(self, report):
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
         position = mzone.get_last_position(str(report["vehicle_Id"]))
-        print(position["vehicle"])
+        logger.info("Reporting position", extra={'props': {"app": "centinela", "data": report}})
         if position:
             token = b64.b64encode("centinela:"+self.token)
             headers = {"Authorization": "Bearer %s" % token, "Content-Type": "application/json"}
@@ -92,13 +107,13 @@ class Centinela(object):
                         'mr': report["marca"], 'md': report["modelo"], 'an': report["unidadyear"], 'cl': report["color"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
-                print(resp)
                 resp = requests.post(self.endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
-                print(resp)
                 resp = requests.post(self.endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
+            logger.info("Sending position for report", extra={'props': {"app": "centinela",
+                                                                        "data": report, "raw": resp.json()}})
             self._update_folio(report, resp.json())
             self._generate_historic(report, position, resp.json())
