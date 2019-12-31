@@ -101,7 +101,7 @@ class Centinela(object):
         vehicles = mzone.get_vehicles(extra="unit_Description eq '"+str(vehicle)+"'")
         if len(vehicles) > 0:
             logger.info("Updating report", extra={'props': {"app": "centinela", "data": vehicles}})
-            sql = "update centinela.reportes set \"vehicle_Id\" where id=%s"
+            sql = "update centinela.reportes set \"vehicle_Id\"=%s where id=%s"
             if not self._conn:
                 self._connect()
             cursor = self._conn.cursor()
