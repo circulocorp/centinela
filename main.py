@@ -46,6 +46,7 @@ def check_incomplete():
     cent = Centinela(dbuser=pguser, dbpass=pgpass, dbhost=pghost, mzone_user=mzone_user,
                      mzone_pass=mzone_pass, mzone_secret=mzone_secret, token=centinela_token)
     reportes = cent.get_incomplete_reports()
+    print(reportes)
     for reporte in reportes:
         cent.update_unit(reporte['Unit_Id'], reporte['id'])
 
@@ -54,9 +55,8 @@ def main():
     print(Utils.print_title("package.json"))
     cent = Centinela(dbuser=pguser, dbpass=pgpass, dbhost=pghost)
     while True:
+        check_incomplete()
         reportes = cent.get_open_reports()
-        if len(reportes) < 1:
-            check_incomplete()
         for reporte in reportes:
             thread = Thread(target=start, args=(reporte,))
             thread.start()

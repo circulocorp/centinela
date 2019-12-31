@@ -92,19 +92,23 @@ class Centinela(object):
         except (Exception, pg.Error) as error:
             logger.error(str(error), extra={'props': {"app": "centinela"}})
         finally:
-            logger.info("Getting Incomplete reports", extra={'props': {"app": "centinela", "data": sql}})
+            logger.info("Getting Incomplete reports", extra={'props': {"app": "centinela"}})
             return reports
 
     def update_unit(self, vehicle, reporte):
+        logger.info("Updating report", extra={'props': {"app": "centinela", "data": reporte}})
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
-        vehicles = mzone.get_vehicles(extra="registration eq '"+str(vehicle)+"'")
+        vehicles = mzone.get_vehicles(extra="unit_Description eq '"+str(vehicle)+"'")
         if len(vehicles) > 0:
+            logger.info("Updating report", extra={'props': {"app": "centinela", "data": vehicles}})
             sql = "update centinela.reportes set \"vehicle_Id\" where id=%s"
             if not self._conn:
                 self._connect()
             cursor = self._conn.cursor()
             cursor.execute(sql, (vehicle, vehicles[0]["id"], reporte))
             self._conn.commit()
+        else:
+            logger.info("No incomplete reports", extra={'props': {"app": "centinela"}})
 
     def _update_folio(self, report, rest):
         sql = "update centinela.reportes set folio=%s,status=%s where id=%s"
