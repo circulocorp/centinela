@@ -53,15 +53,58 @@ class Centinela(object):
                 report["color"] = row[5]
                 report["placa"] = row[6]
                 report["vin"] = row[7]
-                report["created"] = row[8]
-                report["status"] = row[9]
-                report["vehicle_Id"] = row[10]
+                report["Unit_Id"] = row[8]
+                report["created"] = row[9]
+                report["status"] = row[10]
+                report["vehicle_Id"] = row[11]
                 reports.append(report)
         except (Exception, pg.Error) as error:
             logger.error(str(error), extra={'props': {"app": "centinela"}})
         finally:
             logger.info("Active reports", extra={'props': {"app": "centinela", "data": reports}})
             return reports
+
+    def get_incomplete_reports(self):
+        sql = "select id,folio,marca,modelo,unidadyear,color,placa,vin,\"Unit_Id\", created,status,\"vehicle_Id\" from " \
+              "centinela.reportes where status = 1 and \"vehicle_Id\" ==  ''"
+        reports = []
+        if not self._conn:
+            self._connect()
+        try:
+            cursor = self._conn.cursor()
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            for row in data:
+                report = {}
+                report["id"] = row[0]
+                report["folio"] = row[1]
+                report["marca"] = row[2]
+                report["modelo"] = row[3]
+                report["unidadyear"] = row[4]
+                report["color"] = row[5]
+                report["placa"] = row[6]
+                report["vin"] = row[7]
+                report["Unit_Id"] = row[8]
+                report["created"] = row[9]
+                report["status"] = row[10]
+                report["vehicle_Id"] = row[11]
+                reports.append(report)
+        except (Exception, pg.Error) as error:
+            logger.error(str(error), extra={'props': {"app": "centinela"}})
+        finally:
+            logger.info("Active reports", extra={'props': {"app": "centinela", "data": reports}})
+            return reports
+
+    def update_unit(self, vehicle, reporte):
+        mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
+        vehicles = mzone.get_vehicles(extra="registration eq '"+vehicle+"'")
+        if len(vehicles) > 0:
+            sql = "update centinela.reportes set \"vehicle_Id\" where id=%s"
+            if not self._conn:
+                self._connect()
+            cursor = self._conn.cursor()
+            cursor.execute(sql, (vehicle, vehicles[0]["id"], reporte))
+            self._conn.commit()
 
     def _update_folio(self, report, rest):
         sql = "update centinela.reportes set folio=%s,status=%s where id=%s"

@@ -42,11 +42,19 @@ def start(reporte):
     cent.report_position(reporte)
 
 
+def check_incomplete(cent):
+    reportes = cent.get_incomplete_reports()
+    for reporte in repores:
+        cent.update_unit(repote['Unit_Id'], reporte['id'])
+
+
 def main():
     print(Utils.print_title("package.json"))
     cent = Centinela(dbuser=pguser, dbpass=pgpass, dbhost=pghost)
     while True:
         reportes = cent.get_open_reports()
+        if len(reportes) < 1:
+            check_incomplete(cent)
         for reporte in reportes:
             thread = Thread(target=start, args=(reporte,))
             thread.start()
