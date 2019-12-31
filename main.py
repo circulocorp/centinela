@@ -44,7 +44,7 @@ def start(reporte):
 
 def check_incomplete(cent):
     reportes = cent.get_incomplete_reports()
-    for reporte in repores:
+    for reporte in reportes:
         cent.update_unit(repote['Unit_Id'], reporte['id'])
 
 
