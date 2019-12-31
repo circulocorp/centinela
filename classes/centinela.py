@@ -97,7 +97,7 @@ class Centinela(object):
 
     def update_unit(self, vehicle, reporte):
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
-        vehicles = mzone.get_vehicles(extra="registration eq '"+vehicle+"'")
+        vehicles = mzone.get_vehicles(extra="registration eq '"+str(vehicle)+"'")
         if len(vehicles) > 0:
             sql = "update centinela.reportes set \"vehicle_Id\" where id=%s"
             if not self._conn:
