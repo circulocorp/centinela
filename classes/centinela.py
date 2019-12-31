@@ -105,7 +105,7 @@ class Centinela(object):
             if not self._conn:
                 self._connect()
             cursor = self._conn.cursor()
-            cursor.execute(sql, (vehicle, vehicles[0]["id"], reporte))
+            cursor.execute(sql, (vehicles[0]["id"], reporte))
             self._conn.commit()
         else:
             logger.info("No incomplete reports", extra={'props': {"app": "centinela"}})
