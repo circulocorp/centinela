@@ -35,7 +35,7 @@ class Centinela(object):
 
     def get_open_reports(self):
         sql = "select id,folio,marca,modelo,unidadyear,color,placa,vin,\"Unit_Id\", created,status,\"vehicle_Id\" from " \
-              "centinela.reportes where status < 4 and \"vehicle_Id\" !=  ''"
+              "centinela.reportes where status < 4 and \"vehicle_Id\" <>  '' "
         reports = []
         if not self._conn:
             self._connect()
@@ -66,7 +66,7 @@ class Centinela(object):
 
     def get_incomplete_reports(self):
         sql = "select id,folio,marca,modelo,unidadyear,color,placa,vin,\"Unit_Id\", created,status,\"vehicle_Id\" from " \
-              "centinela.reportes where status = 1 and \"vehicle_Id\" ==  ''"
+              "centinela.reportes where status = 1 and \"vehicle_Id\" = '' "
         reports = []
         if not self._conn:
             self._connect()
