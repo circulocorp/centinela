@@ -92,7 +92,7 @@ class Centinela(object):
         except (Exception, pg.Error) as error:
             logger.error(str(error), extra={'props': {"app": "centinela"}})
         finally:
-            logger.info("Active reports", extra={'props': {"app": "centinela", "data": reports}})
+            logger.info("Getting Incomplete reports", extra={'props': {"app": "centinela", "data": sql}})
             return reports
 
     def update_unit(self, vehicle, reporte):
