@@ -42,7 +42,9 @@ def start(reporte):
     cent.report_position(reporte)
 
 
-def check_incomplete(cent):
+def check_incomplete():
+    cent = Centinela(dbuser=pguser, dbpass=pgpass, dbhost=pghost, mzone_user=mzone_user,
+                     mzone_pass=mzone_pass, mzone_secret=mzone_secret, token=centinela_token)
     reportes = cent.get_incomplete_reports()
     for reporte in reportes:
         cent.update_unit(reporte['Unit_Id'], reporte['id'])
@@ -54,7 +56,7 @@ def main():
     while True:
         reportes = cent.get_open_reports()
         if len(reportes) < 1:
-            check_incomplete(cent)
+            check_incomplete()
         for reporte in reportes:
             thread = Thread(target=start, args=(reporte,))
             thread.start()
