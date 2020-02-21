@@ -116,6 +116,7 @@ class Centinela(object):
             self._connect()
         cursor = self._conn.cursor()
         status = 2
+	print(report)
         folio = None
         if not report["folio"] and rest["status"]:
             logger.info("The report doesn't have ID yet is consider as open",
@@ -125,7 +126,7 @@ class Centinela(object):
             folio = report["folio"]
             if rest["code"] == "REQUEST_LIMIT_EXCEEDED":
                 logger.info("The reports limit was exceeded changing status to 5",
-                            extra={'props': {"app": "centinela", "data": report}})
+                            extra={'props': {"app": "centinela"}})
                 status = 5
         cursor.execute(sql, (folio, status, report["id"]))
         self._conn.commit()
@@ -154,6 +155,7 @@ class Centinela(object):
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
                             position["utcTimestamp"], "%Y-%m-%dT%H:%M:%SZ"), "America/Mexico_City"), "%Y-%m-%d %H:%M:%S")}
                 resp = requests.post(self.endpoint+"api/reporte", data=json.dumps(data), headers=headers, verify=False)
+                print(resp.text)
             else:
                 data = {'fl': report["folio"], 'ln': position["longitude"], 'lt': position["latitude"],
                         'fc': Utils.format_date(Utils.datetime_zone(Utils.string_to_date(
