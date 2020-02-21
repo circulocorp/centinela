@@ -143,8 +143,7 @@ class Centinela(object):
     def report_position(self, report):
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
         position = mzone.get_last_position(str(report["vehicle_Id"]))
-        logger.info("Reporting position", extra={'props': {"app": "centinela", "data": report}})
-        if position:
+        if position is not None:
             token = b64.b64encode("centinela:"+self.token)
             headers = {"Authorization": "Bearer %s" % token, "Content-Type": "application/json"}
             resp = {}
