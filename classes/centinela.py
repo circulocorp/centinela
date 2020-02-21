@@ -61,7 +61,7 @@ class Centinela(object):
         except (Exception, pg.Error) as error:
             logger.error(str(error), extra={'props': {"app": "centinela"}})
         finally:
-            logger.info("Active reports", extra={'props': {"app": "centinela", "data": reports}})
+            logger.info("Active reports", extra={'props': {"app": "centinela"}})
             return reports
 
     def get_incomplete_reports(self):
