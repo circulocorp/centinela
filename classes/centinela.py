@@ -145,7 +145,7 @@ class Centinela(object):
         mzone = MZone(self.mzone_user, self.mzone_pass, self.mzone_secret, "mz-a3tek")
         position = mzone.get_last_position(str(report["vehicle_Id"]))
         if position is not None:
-            token = b64.b64encode("centinela:"+self.token)
+            token = b64.b64encode("circulocorp:"+self.token)
             headers = {"Authorization": "Bearer %s" % token, "Content-Type": "application/json"}
             resp = {}
             if not report["folio"]:
